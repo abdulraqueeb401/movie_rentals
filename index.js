@@ -10,6 +10,7 @@ const auth = require("./routes/auth");
 const mongoose = require("mongoose");
 const config = require("config");
 const error = require("./middleware/error");
+const logger = require("./startup/logging");
 app.use(express.json());
 app.use("/api/genres", genres);
 app.use("/api/customers", customers);
@@ -27,11 +28,11 @@ if (!config.get("jwtPrivateKey")) {
 mongoose
     .connect("mongodb://localhost/movie_rentals")
     .then(() => {
-        console.log("connected to mongodb");
+        logger.log("info", "connected to mongodb");
     })
-    .catch((err) => console.log(err.message));
+    .catch((err) => logger.log("error", err.message, err));
 
 const port = process.env.PORT | 3000;
 app.listen(port, () => {
-    console.log(`listening on port ${port}`);
+    logger.log("info", `listening on port ${port}`);
 });
