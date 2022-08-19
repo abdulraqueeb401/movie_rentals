@@ -4,7 +4,7 @@ const config = require("config");
 module.exports = function () {
     const db = config.get("db");
     mongoose
-        .connect(db)
+        .connect(process.env.MONGODB_URI || db)
         .then(() => {
             logger.log("info", `connected to ${db}`);
         })

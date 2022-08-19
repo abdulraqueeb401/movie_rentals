@@ -1,4 +1,0 @@
-{
-    "jwtPrivateKey": "movieR_jwtPrivateKey",
-    "db": "MONGODB_URI"
-}
