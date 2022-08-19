@@ -3,6 +3,10 @@ const { Genre } = require("../../models/genre");
 const { User } = require("../../models/user");
 let server;
 
+afterAll(async () => {
+    await server.close();
+});
+
 describe("auth middleware", () => {
     let token;
     beforeEach(() => {
@@ -10,7 +14,7 @@ describe("auth middleware", () => {
         token = new User().generateAuthToken();
     });
     afterEach(async () => {
-        server.close();
+        await server.close();
         await Genre.deleteMany({});
     });
     const exec = async () => {
