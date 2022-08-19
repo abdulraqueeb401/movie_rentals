@@ -3,13 +3,14 @@ const { Genre, validateGenre } = require("../models/genre");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
+const validateObjectId = require("../middleware/validateObjectId");
 
 router.get("/", async (req, res) => {
     const genres = await Genre.find().sort("name");
     res.send(genres);
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", validateObjectId, async (req, res) => {
     const genre = await Genre.findById(req.params.id);
     if (!genre) return res.status(404).send("Invalid id");
     res.send(genre);
@@ -25,7 +26,7 @@ router.post("/", auth, async (req, res) => {
     res.send(genre);
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", validateObjectId, async (req, res) => {
     const { error } = validateGenre(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     const genre = await Genre.findByIdAndUpdate(
@@ -41,7 +42,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // middleware 'admin' checks if the user has permission to delete -- admin or not.
-router.delete("/:id", auth, admin, async (req, res) => {
+router.delete("/:id", auth, admin, validateObjectId, async (req, res) => {
     const genre = await Genre.findByIdAndDelete(req.params.id);
     if (!genre)
         return res.status(404).send("A genre with given id is not found.");
